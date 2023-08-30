@@ -1,0 +1,140 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    font-family: ArtifaktElement; /* Will be added by Forge Viewer */
+}
+
+#header, #preview, #overlay {
+    position: absolute;
+    width: 100%;
+}
+
+#header {
+    height: 3em;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#preview, #overlay {
+    top: 3em;
+    bottom: 0;
+}
+
+#overlay {
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 1em;
+    display: none;
+}
+
+#overlay > .notification {
+    margin: auto;
+    padding: 1em;
+    max-width: 50%;
+    background: white;
+}
+
+#header > * {
+    height: 2em;
+    margin: 0 0.5em;
+    font-size: 1em;
+    font-family: ArtifaktElement;
+}
+
+#header .title {
+    flex: 1 0 auto;
+    height: auto;
+}
+
+#models {
+    flex: 0 1 auto;
+    min-width: 2em;
+}
+
+.SpritesExtensionIcon {
+    background-image: url(https://img.icons8.com/ios/512/near-me.png);
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .HeatmapExtensionIcon { 
+    background-image: url(https://img.icons8.com/small/32/brief.png);
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  
+  .HeatmapExtension {
+    background-image: url(https://pic.onlinewebfonts.com/svg/img_431334.png);
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .HeatmapExtensionwithvalue {
+    background-image: url(https://pic.onlinewebfonts.com/svg/img_431334.png);
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .TestHeatmapForAreaButton {
+    background-image: url(https://pic.onlinewebfonts.com/svg/img_431334.png);
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+
+  .GeoLocationIcon {
+    background-image: url(https://img.icons8.com/external-others-inmotus-design/344/external-Coordinates-virtual-keyboard-others-inmotus-design-2.png);
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .HeatmapForEarthwork {
+    background-image: url(https://w7.pngwing.com/pngs/1008/566/png-transparent-heatmap-icon-thumbnail.png);
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  
+  .DrawLinesIcon {
+    background-image: url(https://img.icons8.com/external-basicons-solid-edtgraphics/344/external-draw-outdoors-basicons-solid-edtgraphics.png);
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+
+  .chartMenu {
+    width: 100vw;
+    height: 40px;
+    background: #1A1A1A;
+    color: rgba(54, 162, 235, 1);
+  }
+  .chartMenu p {
+    padding: 10px;
+    font-size: 20px;
+  }
+  .chartCard {
+    width: 100vw;
+    height: calc(100vh - 40px);
+    background: rgba(54, 162, 235, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .chartBox {
+    width: 700px;
+    padding: 20px;
+    border-radius: 20px;
+    border: solid 3px rgba(54, 162, 235, 1);
+    background: white;
+  }
