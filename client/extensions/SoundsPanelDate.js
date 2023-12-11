@@ -33,13 +33,13 @@ const data= {
 
 function updateSensor(sensorSelect) {
     if (sensorSelect.value === "sensor1") {
-        chart.data.datasets[0].data=[0,0];
-        chart.data.labels =[0,0];
+        // chart.data.datasets[0].data=[0,0];
+        // chart.data.labels =[0,0];
         console.log("Drilling rig selected"); 
     } else if (sensorSelect.value === "sensor2") {
-        chart.data.datasets[0].data=[0,0];
-        chart.data.labels =[0,0];
-        console.log("Sensor 2 selected");
+        // chart.data.datasets[0].data=[0,0];
+        // chart.data.labels =[0,0];
+        console.log("Excavator selected");
     }
     // chart.update();
 }
@@ -56,7 +56,6 @@ function updateEmission(emissionSelect) {
 }
 async function filterDate(sensorSelect,emissionSelect,chartNOx,chartCO2){    
     if (emissionSelect.value==="emission1"){
-        // this.data.backgroundColor= '#FFF000';
         if (sensorSelect.value==="sensor1"){
             const start1 = new Date(document.getElementById('startDateEm').value);
             start1.setHours(0,0,0,0);
@@ -157,8 +156,6 @@ async function filterDate(sensorSelect,emissionSelect,chartNOx,chartCO2){
             this.chartNOx.data.datasets[0].borderColor = '#FFF000';
 
         }
- // Set line color to red
-
         this.chartNOx.update();
         this.chartNOx.canvas.style.display = 'block';
         this.chartCO2.canvas.style.display = 'none';   
@@ -210,86 +207,74 @@ async function filterDate(sensorSelect,emissionSelect,chartNOx,chartCO2){
             copydataFromTesting.splice(0, startArray)
             this.chartCO2.data.datasets[0].data=copydataFromTesting
             console.log(startArray,"startArray")
-            this.chartNOx.data.datasets[0].borderColor = '#0000FF';
+            this.chartCO2.data.datasets[0].borderColor = '#0000FF';
         
             console.log("emission2 sensor1 selected")}
+            else if (sensorSelect.value==="sensor2"){
+                console.log("emission2 sensor2 selected")
+                const start1 = new Date(document.getElementById('startDateEm').value);
+                start1.setHours(0,0,0,0);
+                const start=start1.getTime();
+                console.log(start);        
+                const intervall = document.getElementById('intervall').value;
+                const maxDataPoints = document.getElementById('maxDataPoints').value;
+                const aggregationFunction = document.getElementById('aggregationFunction').value;
+                const end1=new Date(document.getElementById('endDateEm').value);
+                const end = end1.setHours(0, 0, 0, 0);
+                const datesFromAirlabCO2 = []; 
+                const CO2EmissionsFromAirlab = [];
+                const query = {
+                    start: start,
+                    intervall: intervall,
+                    maxDataPoints: maxDataPoints,
+                    aggregationFunction: aggregationFunction,
+                    end: end
+                };
+                const queryString = new URLSearchParams(query).toString();
+                try {
+                    const response = await fetch(`http://127.0.0.1:8001/CO2EmissionsfromAirlabsExcavator.js?${queryString}`);
+                    if (response.ok) {
+                        const responseData = await response.json();
+                        console.log(responseData);
+                        datesFromAirlabCO2.push(...responseData.SCD30_CO2.map(item => item.ts)); 
+                        CO2EmissionsFromAirlab.push(...responseData.SCD30_CO2.map(item => item.value));
+                        console.log(datesFromAirlabCO2, CO2EmissionsFromAirlab);
+                    } else {
+                        console.error('Failed to retrieve data');
+                    }
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                }
+                const filterDates = datesFromAirlabCO2.filter(date => date >= start && date <= end);
+                this.chartCO2.data.labels =filterDates.map(timestamp => new Date(timestamp));
+                console.log(filterDates)
+                //working on the data
+                const startArray=datesFromAirlabCO2.indexOf(filterDates[0])
+                const endArray=datesFromAirlabCO2.indexOf(filterDates[filterDates.length - 1])
+                console.log(startArray, endArray)
+                const copydataFromTesting=[...CO2EmissionsFromAirlab]
+                copydataFromTesting.splice(endArray + 1, filterDates.length)
+                copydataFromTesting.splice(0, startArray)
+                this.chartCO2.data.datasets[0].data=copydataFromTesting
+                console.log(startArray,"startArray")
+                this.chartCO2.data.datasets[0].borderColor = '#0000FF';
+        }
             this.chartCO2.update();
             this.chartNOx.canvas.style.display = 'none';
             this.chartCO2.canvas.style.display = 'block';
-    } else if (emissionSelect.value==="emission2"){
-        const start1 = new Date(document.getElementById('startDateEm').value);
-        start1.setHours(0,0,0,0);
-        const start=start1.getTime();
-        console.log(start);        
-        const intervall = document.getElementById('intervall').value;
-        const maxDataPoints = document.getElementById('maxDataPoints').value;
-        const aggregationFunction = document.getElementById('aggregationFunction').value;
-        const end1=new Date(document.getElementById('endDateEm').value);
-        const end = end1.setHours(0, 0, 0, 0);
-        const datesFromAirlabCO2 = []; 
-        const CO2EmissionsFromAirlab = [];
-        const query = {
-            start: start,
-            intervall: intervall,
-            maxDataPoints: maxDataPoints,
-            aggregationFunction: aggregationFunction,
-            end: end
-        };
-        const queryString = new URLSearchParams(query).toString();
-        try {
-            const response = await fetch(`http://127.0.0.1:8001/CO2EmissionsfromAirlabsExcavator.js?${queryString}`);
-            if (response.ok) {
-                const responseData = await response.json();
-                console.log(responseData);
-                datesFromAirlabCO2.push(...responseData.SCD30_CO2.map(item => item.ts)); 
-                CO2EmissionsFromAirlab.push(...responseData.SCD30_CO2.map(item => item.value));
-                console.log(datesFromAirlabCO2, CO2EmissionsFromAirlab);
-            } else {
-                console.error('Failed to retrieve data');
-            }
-        } catch (error) {
-            console.error('An error occurred:', error);
-        }
-        // const filterDates = datesFromAirlabCO2.filter(date => date >= start && date <= end);
-        // this.chartCO2.data.labels =filterDates.map(timestamp => new Date(timestamp));
-        // console.log(filterDates)
-        // //working on the data
-        // const startArray=datesFromAirlabCO2.indexOf(filterDates[0])
-        // const endArray=datesFromAirlabCO2.indexOf(filterDates[filterDates.length - 1])
-        // console.log(startArray, endArray)
-        // const copydataFromTesting=[...CO2EmissionsFromAirlab]
-        // copydataFromTesting.splice(endArray + 1, filterDates.length)
-        // copydataFromTesting.splice(0, startArray)
-        // this.chartCO2.data.datasets[0].data=copydataFromTesting
-        // console.log(startArray,"startArray")
-        // this.chartNOx.data.datasets[0].borderColor = '#0000FF';
-    
-        console.log("emission2 sensor1 selected")}
-
-
-        this.chartCO2.update();
-        this.chartNOx.canvas.style.display = 'none';
-        this.chartCO2.canvas.style.display = 'block';
-
-        
-
-    
-
-
-
+        } 
     }
 
-
-
-function resetDate(sensorSelect,chart){
+function resetDate(sensorSelect,chartNOx){
     if (sensorSelect.value==='sensor1'){
-        chart.data.labels =[0,0]
-        chart.data.datasets[0].data=[0,0]
+        // chart.data.labels =[0,0]
+        // chart.data=[0,0]
+        this.chartNOx.data.labels=[0,0]
     } else if (sensorSelect.value==='sensor2'){
         chart.data.datasets[0].data = [0,0];
         chart.data.labels = [0,0]; 
     }
-    chart.update();
+    this.chartNOx.update();
 }
 
 export class SoundsPanelDate extends Autodesk.Viewing.UI.DockingPanel {
@@ -411,7 +396,7 @@ export class SoundsPanelDate extends Autodesk.Viewing.UI.DockingPanel {
         filterButton.addEventListener('click', filterDate.bind(this, select, emissionSelect, this.chartNOx, this.chartCO2));
         const resetButton = document.createElement('button');
         resetButton.textContent = 'Reset';
-        resetButton.addEventListener('click', () => resetDate(select,emissionSelect,this.chart));
+        resetButton.addEventListener('click', () => resetDate(this,select,emissionSelect,this.chartNOx));
         const actionCell = document.createElement('td');
         actionCell.appendChild(filterButton);
         actionCell.appendChild(resetButton);
