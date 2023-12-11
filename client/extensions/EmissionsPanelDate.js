@@ -1,7 +1,7 @@
-import { getData } from './SoundsTestingData.js'
-import { getDates } from './SoundsTestingData.js'
-import { getDataSensor2 } from './SoundsTestingData.js'
-import { getDatesSensor2 } from './SoundsTestingData.js'
+import { getData } from './EmissionsTestingData.js'
+import { getDates } from './EmissionsTestingData.js'
+import { getDataSensor2 } from './EmissionsTestingData.js'
+import { getDatesSensor2 } from './EmissionsTestingData.js'
 
 //Data from weather website
 
@@ -14,8 +14,6 @@ const temperatures = getTemperatures()
 //Data for sensor 1
 const dataFromTesting = getData()
 const datesFromTesting = getDates()
-// console.log(datesFromTesting)
-//Data for sensor 2
 const dataFromTestingSensor2 = getDataSensor2()
 const datesFromTestingSensor2 = getDatesSensor2()
 
@@ -277,7 +275,7 @@ function resetDate(sensorSelect,chartNOx){
     this.chartNOx.update();
 }
 
-export class SoundsPanelDate extends Autodesk.Viewing.UI.DockingPanel {
+export class EmissionsPanelDate extends Autodesk.Viewing.UI.DockingPanel {
     constructor(extension, id, title, options) {
         super(extension.viewer.container, id, title, options);
         this.extension = extension;
@@ -462,88 +460,4 @@ export class SoundsPanelDate extends Autodesk.Viewing.UI.DockingPanel {
 }
 
 
-
-
-
-// selectElement.onchange = (event) => {
-//     const value = event.target.value;
-
-//     switch (value) {
-//         case 'CO2':
-//             this.disableHeatmap();
-//             this.loadHeatmap();
-//             break;
-//         case 'PM':
-//             this.disableHeatmap();
-//             this.loadHeatmapPM();
-//             break;
-//         case 'NOx':
-//             this.disableHeatmap();
-//             this.loadHeatmapNOx();
-//             break;
-
-//         default:
-//             break;
-//     }
-// }
-
-
-// createChart() {
-//     return new Chart(this.canvas.getContext('2d'), {
-//         type: 'bar',
-//         data: {
-//             labels: ['Pile name'], //or PilesNames[0]
-//             datasets: [{
-//                 data: [CO2Emissions[0]],
-//                 label: 'CO2 Emissions(kg)',
-//                 borderColor: "#FF0000",
-//                 backgroundColor: ["#FF0000"],
-//                 fill: false
-//             },
-//             {
-//                 data: [NOxEmissions[0]],
-//                 label: "NOx Emissions(g)",
-//                 borderColor: "#FFA500",
-//                 backgroundColor: ["#FFA500"],
-//                 fill: false
-//             },
-//             {
-//                 data: [PMEmissions[0]],
-//                 label: "PM Emissions (g)",
-//                 borderColor: "#FFFF00",
-//                 backgroundColor: ["#FFFF00"],
-//                 fill: false
-//             },
-//             {
-//                 data: [AvgPowers[0]],
-//                 label: "Avg. Power (kW)",
-//                 borderColor: "##008000",
-//                 backgroundColor: ["#008000"],
-//                 fill: false
-//             },
-//             {
-//                 data: [WorkingTime[0] * 60],
-//                 label: "Drilling time (min)",
-//                 borderColor: "#8e5ea2",
-//                 backgroundColor: ["#3e95cd"],
-//                 fill: false
-//             },
-//             {
-//                 data: [AvgDrillingSpeeds[0]],
-//                 label: "Avg. Drilling Speed (rpm)",
-//                 borderColor: "#800080",
-//                 backgroundColor: ["#800080"],
-//                 fill: false
-//             },
-
-//             ]
-//         },
-//         options: {
-//             title: {
-//                 display: true,
-//                 text: 'Data per piles'
-//             }
-//         }
-//     });
-// }
 

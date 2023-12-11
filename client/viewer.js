@@ -5,18 +5,9 @@ import './extensions/ActivitiesOverview.js';
 import './extensions/MachinesOverview.js'; 
 import './extensions/AppearObjects.js';
 import './extensions/TrajectoryOverview.js';
-import './extensions/SoundsOverviewDate.js';
-import './extensions/GetDataTest.js';
-// import './extensions/HeatmapForEarthwork.js';
-// import './extensions/SpritesExtension.js';
-
-// import './extensions/Trajectory3.js';
-// import './extensions/LoggerExtension.js';
-// import './extensions/SummaryExtension.js';
-// import './extensions/SiteSensorsList.js';  
-// import './extensions/GeoLocationExtension.js';
-// import './extensions/TestHeatmapwithAirLab.js'; // //needs to be added to device list panel
-// import './extensions/TestHeatmapForEarthwork.js'; //needs to be added to piles list panel
+import './extensions/EmissionsOverviewDate.js';
+// import './extensions/GetDataTest.js';
+import './extensions/Simulation_overview.js';
 
 
 
@@ -50,8 +41,10 @@ export function initViewer(container) {
                     'AppearObjects',
                     'MachinesOverview',
                     'TrajectoryOverview',
-                    'SoundsOverviewDate',
+                    'EmissionsOverviewDate',
                     'GetDataTest',
+                    'SimulationOverview',
+
                     // 'HeatmapForEarthwork',
 
                     // 'Trajectory3',

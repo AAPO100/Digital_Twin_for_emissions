@@ -1,9 +1,9 @@
 import { BaseExtension } from './BaseExtension.js';
 import { getLocationObjects, getMachineInfo } from './DataProcessing.js'
-import { SoundsPanel } from './SoundsPanel.js';
+import { EmissionsPanelDate } from './EmissionsPanelDate.js';
 
 
-class SoundsOverview extends BaseExtension {
+class EmissionsOverviewDate extends BaseExtension {
     constructor(viewer, options) {
         super(viewer, options);
         this._barChartButton = null;
@@ -15,7 +15,7 @@ class SoundsOverview extends BaseExtension {
         super.load();
         await this.loadScript('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js', 'Chart');
         Chart.defaults.plugins.legend.display = false;
-        console.log('SoundsOverviewExtension loaded');
+        console.log('EmissionsOverviewExtensionDate loaded');
         return true;
     }
 
@@ -30,13 +30,13 @@ class SoundsOverview extends BaseExtension {
             panel.uninitialize();
         }
         this._barChartPanel = null;
-        console.log('SoundsOverviewExtension unloaded')
+        console.log('EmissionsOverviewExtensionDate unloaded')
         return true;
     }
 
     onToolbarCreated() {
-        this._barChartPanel = new SoundsPanel(this, 'dashboard-barchart-panel', 'Sounds overview', { x: 10, y: 10, chartType: 'line' });
-        this._barChartButton = this.createToolbarButton('sounds-noise-button',"https://www.clipartmax.com/png/small/8-82242_pin-sound-waves-clipart-sound-waves-black-and-white.png",'Show noise levels of sensors');
+        this._barChartPanel = new EmissionsPanelDate(this, 'dashboard-barchart-panel', 'Emissions overview', { x: 10, y: 10, chartType: 'bar' });
+        this._barChartButton = this.createToolbarButton('Emissions-noise-button-date',"https://thenounproject.com/api/private/icons/4476290/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0",'Show emissions of machines');
         this._barChartButton.onClick = () => {
             this._barChartPanel.setVisible(!this._barChartPanel.isVisible());
             this._barChartButton.setState(this._barChartPanel.isVisible() ? Autodesk.Viewing.UI.Button.State.ACTIVE : Autodesk.Viewing.UI.Button.State.INACTIVE);
@@ -97,4 +97,4 @@ class SoundsOverview extends BaseExtension {
 
 
 
-Autodesk.Viewing.theExtensionManager.registerExtension('SoundsOverview', SoundsOverview);
+Autodesk.Viewing.theExtensionManager.registerExtension('EmissionsOverviewDate', EmissionsOverviewDate);

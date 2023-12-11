@@ -6,12 +6,11 @@ import pandas as pd
 from flask_cors import CORS
 from flask import request
 import time
-# import json
+import json
 import API
-import DataProcessing
+from Simulation import simulation
 
 y=API.get_air_intel_token()
-# print(y)
 
 app = Flask(__name__)
 CORS(app)
@@ -30,6 +29,8 @@ collection2 = db2["Location"]
 db3 = client["DrillingRigEmissions"]
 collection3 = db3["NOx3"]
 
+dbPEMSEXCAVATOR=client["PEMS_HEATMAPS"]
+collectionExcavator=dbPEMSEXCAVATOR["Excavator"]
 
 @app.route("/")
 def index():
@@ -120,7 +121,6 @@ def save_position():
         # Handle GET requests
         # Add your logic here for GET requests
         return 'GET request received', 200
-    
 
 @app.route("/NOxEmissionsfromAirlabsDrillingRig.js", methods=['GET','POST'])
 def NOxEmissions_jsAirlabDrillingRig():
@@ -161,6 +161,31 @@ def CO2Emissions_jsAirlabExcavator():
     end = request.args.get('end')
     x=API.get_air_intel_measurement_CO2_Excavator(start, end, intervall, maxDataPoints, aggregationFunction)
     return (x)
+
+# @app.route("/ExcavatorEmissions.js" )
+
+    
+
+@app.route("/get_resources.js", methods=['POST'])
+def get_resources():
+    global trucks
+    machine_resources = request.json
+    NUM_TRUCKS = int(machine_resources['Trucks'])
+    NUM_DRILLINGRIGS = int(machine_resources['DrillingRig'])
+    Stockpile = int(machine_resources['Stockpile'])
+    NUM_LOADERS= int(machine_resources['Loaders'])
+    SIMTime = int(machine_resources['simulationTime'])*60
+    DistanceToTravel = int(machine_resources['DistanceToTravel'])
+    SoilType = str(machine_resources['SoilType'])
+    BucketSize = int(machine_resources['BucketSize'])
+    TruckCapacity = int(machine_resources['TruckCapacity'])
+    TruckBrand=str(machine_resources['TruckBrand'])
+    LoaderType=str(machine_resources['LoaderType'])
+
+    # print(TruckBrand)
+    x=simulation(NUM_LOADERS, NUM_TRUCKS, NUM_DRILLINGRIGS, Stockpile, SIMTime,DistanceToTravel,SoilType,BucketSize,TruckCapacity,TruckBrand,LoaderType)
+    return jsonify(x)
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port)

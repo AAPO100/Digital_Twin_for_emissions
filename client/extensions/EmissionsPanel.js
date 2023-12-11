@@ -1,7 +1,7 @@
 import { getData } from './testing.js'
 
 const dataFromTesting = getData()
-export class SoundsPanel extends Autodesk.Viewing.UI.DockingPanel {
+export class EmissionsPanel extends Autodesk.Viewing.UI.DockingPanel {
     constructor(extension, id, title, options) {
         super(extension.viewer.container, id, title, options);
         this.extension = extension;
@@ -59,12 +59,12 @@ export class SoundsPanel extends Autodesk.Viewing.UI.DockingPanel {
     // }
 
     // async updateChart(model, propName) {
-    //     const sounds = await this.extension.findPropertyValueOccurrences(model, propName);
-    //     const propertyValues = Array.from(sounds.keys());
+    //     const Emissions = await this.extension.findPropertyValueOccurrences(model, propName);
+    //     const propertyValues = Array.from(Emissions.keys());
     //     this.chart.data.labels = propertyValues;
     //     const dataset = this.chart.data.datasets[0];
     //     dataset.label = propName;
-    //     dataset.data = propertyValues.map(val => sounds.get(val).length);
+    //     dataset.data = propertyValues.map(val => Emissions.get(val).length);
     //     if (dataset.data.length > 0) {
     //         const hslaColors = dataset.data.map((val, index) => `hsla(${Math.round(index * (360 / dataset.data.length))}, 100%, 50%, 0.2)`);
     //         dataset.backgroundColor = dataset.borderColor = hslaColors;
@@ -73,7 +73,7 @@ export class SoundsPanel extends Autodesk.Viewing.UI.DockingPanel {
     //     this.chart.config.options.onClick = (ev, items) => {
     //         if (items.length === 1) {
     //             const index = items[0].index;
-    //             const dbids = sounds.get(propertyValues[index]);
+    //             const dbids = Emissions.get(propertyValues[index]);
     //             this.extension.viewer.isolate(dbids);
     //             this.extension.viewer.fitToView(dbids);
     //         }
