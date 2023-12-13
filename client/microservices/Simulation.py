@@ -8,11 +8,11 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
 NUM_LOADERS = 1
-NUM_TRUCKS = 1
+NUM_TRUCKS = 2
 NUM_DRILLINGRIGS = 2
-SIM_TIME = 480*60
-Initial_soil=11
-Distance =10
+SIM_TIME = 80*60
+Initial_soil=10
+Distance =30
 soilType = 'Clay'
 Bucket_size=2
 Truck_capacity=10
@@ -203,14 +203,11 @@ def simulation(NUM_LOADERS,NUM_TRUCKS,NUM_DRILLINGRIGS,Initial_soil,SIM_TIME,Dis
         
         def get_Lo_time_list(self):
             return self.Lo_time_list
-
+#For one truck
         def truck(self,env, Truck_id, stockpile):
             while True:
                 if env.now < SIM_TIME:
                      while soil.level > 0:
-                # print(f' {Truck_id} is at the stockpile at {env.now /60:.2f} min')
-                # self.set_stateTr(TruckState.IDLING, env.now) 
-                # output.append(f' {Truck_id} is at the stockpile at {env.now /60:.2f} min')
                         if soil.level >= 10:
                             yield env.timeout(FILLING_TIME)
                             soil.get(Truck_capacity/soil_factor)
@@ -257,6 +254,44 @@ def simulation(NUM_LOADERS,NUM_TRUCKS,NUM_DRILLINGRIGS,Initial_soil,SIM_TIME,Dis
                                 yield env.timeout(30)
                 else:
                     break
+        # For more trucks
+        # def truck(self,env, Truck_id, stockpile):
+        #     while env.now < SIM_TIME:
+        #         with stockpile.loaders.request() as request:
+        #             yield request
+        #             a=loaders_queue.level
+        #             b=NUM_LOADERS-a
+        #             loader_id = b+1
+        #             self.set_stateTr(TruckState.IDLING, env.now)
+        #             trucks_queue_loading.get(1)
+        #             loaders_queue.get(1)
+        #             self.set_stateTr(TruckState.FILLING, env.now)
+        #             self.set_stateLo(LoaderState.LOADING, env.now,loader_id)
+        #             global_Lo_state_list.append(self.stateLo)
+        #             global_Lo_time_list.append(env.now)
+        #             yield env.process(stockpile.fill_truck(Truck_id,loader_id))
+        #             self.set_stateTr(TruckState.HAULING, env.now)
+        #             self.set_stateLo(LoaderState.IDLING, env.now,loader_id)
+        #             loaders_queue.put(1)
+        #             global_Lo_state_list.append(self.stateLo)
+        #             global_Lo_time_list.append(env.now)
+        #         yield env.process(stockpile.haul_soil_going(Truck_id))
+        #         trucks_queue_unloading.put(1)
+        #         self.set_stateTr(TruckState.UNLOADING, env.now)
+        #         yield env.process(stockpile.Unloading(Truck_id))
+        #         global_Lo_state_list.append(self.stateLo)
+        #         global_Lo_time_list.append(env.now)
+        #         self.set_stateTr(TruckState.HAULING, env.now)
+        #         yield env.process(stockpile.haul_returning(Truck_id))
+        #         global_Lo_state_list.append(self.stateLo)
+        #         global_Lo_time_list.append(env.now)
+        #         trucks_queue_loading.put(1)
+        #         self.set_stateTr(TruckState.IDLING, env.now) 
+        #         global_Lo_state_list.append(self.stateLo)
+        #         global_Lo_time_list.append(env.now)
+        #         yield env.timeout(1)
+                # else:
+                #     break
 
     class Stockpile(object):
         def __init__(self, env, num_loaders, filling_time, haul_time,unload_time,loading_time):
@@ -272,6 +307,9 @@ def simulation(NUM_LOADERS,NUM_TRUCKS,NUM_DRILLINGRIGS,Initial_soil,SIM_TIME,Dis
             print(f'Filling  {Truck_id} started at {env.now /60:.2f} min by Loader {loader_id}')
             output.append(f'Filling  {Truck_id} started at {env.now /60:.2f} min by Loader {loader_id}')
             yield env.timeout(self.filling_time)
+
+            soil.get(Truck_capacity/soil_factor)
+
             soil_left.append(soil.level)
             soil_time.append(round(env.now / 60, 2))
             print(f' {Truck_id} filled in at {env.now /60:.2f} min by Loader {loader_id} and starts hauling ')
@@ -297,7 +335,7 @@ def simulation(NUM_LOADERS,NUM_TRUCKS,NUM_DRILLINGRIGS,Initial_soil,SIM_TIME,Dis
             print(f' {drillingRig_id} drill started at {env.now /60:.2f} min')
             output.append(f' {drillingRig_id} drill started at {env.now /60:.2f} min')
             yield env.timeout(self.loading_time)
-            soil.put(Bucket_size)
+            # soil.put(Bucket_size)
             soil_left.append(soil.level)
             soil_time.append(round(env.now / 60, 2))
 
@@ -312,6 +350,17 @@ def simulation(NUM_LOADERS,NUM_TRUCKS,NUM_DRILLINGRIGS,Initial_soil,SIM_TIME,Dis
         for i in range(num_drillingRigs):
             drillingRigs.append(DrillingRig(env,drillingRig_id=i+1))
             env.process(drillingRigs[i].drilling(env, 'DrillingRig %d' % i, stockpile))
+
+    # def setup(env, num_loaders, num_trucks, num_drillingRigs, filling_time, haul_time, unload_time, loading_time):
+    #     stockpile = Stockpile(env, num_loaders, filling_time, haul_time, unload_time, loading_time)
+    #     # Create a list of truck processes
+    #     truck_processes = [Truck(env, i+1, i-num_loaders).truck(env, 'Truck %d' % i, stockpile) for i in range(num_trucks)]
+    #     # Add all truck processes to the environment
+    #     for process in truck_processes:
+    #         env.process(process)
+    #     for i in range(num_drillingRigs):
+    #         drillingRig = DrillingRig(env, drillingRig_id=i+1)
+    #         env.process(drillingRig.drilling(env, 'DrillingRig %d' % i, stockpile))
     print('Stockpile Simulation')
     setup(env, NUM_LOADERS, NUM_TRUCKS,NUM_DRILLINGRIGS, FILLING_TIME, HAUL_TIME,UNLOAD_TIME,LOADING_TIME)
     env.run(until=SIM_TIME )
@@ -613,12 +662,19 @@ def simulation(NUM_LOADERS,NUM_TRUCKS,NUM_DRILLINGRIGS,Initial_soil,SIM_TIME,Dis
                     truck_emissions_over_time[i]['NOx [kg/kWh]'].append(calculate_emissions(emissions.Tr_probability_Driving,truck_brand_data.get('Tr_NOx_Driving', 0), truck.Tr_time_list[j])/1000)
                     truck_emissions_over_time[i]['CO2 [kg]'].append(calculate_emissions(emissions.Tr_probability_Driving, truck_brand_data.get('Tr_CO2_Driving', 0), truck.Tr_time_list[j])/1000)
                     truck_emissions_over_time[i]['Fuel [kg]'].append(calculate_emissions(emissions.Tr_probability_Driving, truck_brand_data.get('Tr_Fuel_Driving', 0), truck.Tr_time_list[j])/1000)
+
+
+            #For one truck        
             if i > 0:
                 truck_emissions_over_time[i]['NOx [kg/kWh]'].insert(0, 0)
                 truck_emissions_over_time[i]['CO2 [kg]'].insert(0, 0)
                 truck_emissions_over_time[i]['Fuel [kg]'].insert(0, 0)
                 truck_emissions_over_time['Activity'][i].insert(0, 'Idling')
                 truck_emissions_over_time['Time (mins)'][i].insert(0, 0)
+
+
+
+
             # elif i == 0:
             #     first_truck_total_time = np.sum(trucks[0].Tr_time_list)
             #     last_value = SIM_TIME - first_truck_total_time                
