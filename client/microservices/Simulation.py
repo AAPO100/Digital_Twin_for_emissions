@@ -8,14 +8,14 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
 NUM_LOADERS = 1
-NUM_TRUCKS = 2
+NUM_TRUCKS = 1
 NUM_DRILLINGRIGS = 2
-SIM_TIME = 80*60
+SIM_TIME = 4*5*480*60
 Initial_soil=10
-Distance =30
-soilType = 'Clay'
-Bucket_size=2
-Truck_capacity=10
+Distance =1
+soilType = 'Rock'
+Bucket_size=1
+Truck_capacity=5
 output = []
 TruckBrand='Volvo'
 LoaderType='Volvo Wheel Loader L350F'
@@ -246,8 +246,9 @@ def simulation(NUM_LOADERS,NUM_TRUCKS,NUM_DRILLINGRIGS,Initial_soil,SIM_TIME,Dis
                                     global_Lo_state_list.append(self.stateLo)
                                     global_Lo_time_list.append(env.now)
                         else:
+                        # elif soil.level < 10:
                             if trucks_queue_loading.level > 0:
-                                print( trucks_queue_loading.level)
+                                print( trucks_queue_loading.level, 'trucks in queue')
                                 self.set_stateTr(TruckState.IDLING, env.now) 
                                 global_Lo_state_list.append(self.stateLo)
                                 global_Lo_time_list.append(env.now)
@@ -290,8 +291,13 @@ def simulation(NUM_LOADERS,NUM_TRUCKS,NUM_DRILLINGRIGS,Initial_soil,SIM_TIME,Dis
         #         global_Lo_state_list.append(self.stateLo)
         #         global_Lo_time_list.append(env.now)
         #         yield env.timeout(1)
-                # else:
-                #     break
+        #     else:
+        #         if trucks_queue_loading.level > 0:
+        #             print( trucks_queue_loading.level, 'trucks in queue')
+        #             self.set_stateTr(TruckState.IDLING, env.now) 
+        #             global_Lo_state_list.append(self.stateLo)
+        #             global_Lo_time_list.append(env.now)
+        #             yield env.timeout(30)
 
     class Stockpile(object):
         def __init__(self, env, num_loaders, filling_time, haul_time,unload_time,loading_time):
@@ -351,16 +357,6 @@ def simulation(NUM_LOADERS,NUM_TRUCKS,NUM_DRILLINGRIGS,Initial_soil,SIM_TIME,Dis
             drillingRigs.append(DrillingRig(env,drillingRig_id=i+1))
             env.process(drillingRigs[i].drilling(env, 'DrillingRig %d' % i, stockpile))
 
-    # def setup(env, num_loaders, num_trucks, num_drillingRigs, filling_time, haul_time, unload_time, loading_time):
-    #     stockpile = Stockpile(env, num_loaders, filling_time, haul_time, unload_time, loading_time)
-    #     # Create a list of truck processes
-    #     truck_processes = [Truck(env, i+1, i-num_loaders).truck(env, 'Truck %d' % i, stockpile) for i in range(num_trucks)]
-    #     # Add all truck processes to the environment
-    #     for process in truck_processes:
-    #         env.process(process)
-    #     for i in range(num_drillingRigs):
-    #         drillingRig = DrillingRig(env, drillingRig_id=i+1)
-    #         env.process(drillingRig.drilling(env, 'DrillingRig %d' % i, stockpile))
     print('Stockpile Simulation')
     setup(env, NUM_LOADERS, NUM_TRUCKS,NUM_DRILLINGRIGS, FILLING_TIME, HAUL_TIME,UNLOAD_TIME,LOADING_TIME)
     env.run(until=SIM_TIME )
